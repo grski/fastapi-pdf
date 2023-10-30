@@ -1,0 +1,94 @@
+[tool.poetry]
+name = "pdf-stack-template"
+version = "0.1.0"
+description = ""
+authors = ["theengineers <contact@theengineers.tech>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.11.5"
+fastapi = {extras = ["all"], version = "^0.103.1"}
+pugsql = "^0.2.4"
+sentry-sdk = {extras = ["fastapi"], version = "^1.31.0"}
+gunicorn = "^21.2.0"
+pydantic = "^2.3.0"
+sendgrid = "^6.10.0"
+orjson = "^3.9.7"
+psycopg2-binary = "^2.9.9"
+aiohttp = "^3.8.6"
+stripe = "^7.0.0"
+
+[tool.poetry.group.dev.dependencies]
+ruff = "^0.0.272"
+pre-commit = "^3.3.2"
+black = "^23.3.0"
+pytest = "^7.3.2"
+pytest-mock = "^3.11.1"
+pytest-cov = "^4.1.0"
+httpx = "^0.24.1"
+pytest-asyncio = "^0.21.0"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']
+include = '\.pyi?$'
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.hg
+  | \.mypy_cache
+  | \.tox
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+)/
+'''
+
+[tool.ruff]
+line-length = 120
+select = ["E", "F", "I"]
+fixable = ["A", "B", "C", "D", "E", "F", "I"]
+ignore = ["E712"]
+exclude = [
+    ".bzr",
+    ".direnv",
+    ".eggs",
+    ".git",
+    ".hg",
+    ".mypy_cache",
+    ".nox",
+    ".pants.d",
+    ".pytype",
+    ".ruff_cache",
+    ".svn",
+    ".tox",
+    ".venv",
+    "__pypackages__",
+    "_build",
+    "buck-out",
+    "build",
+    "dist",
+    "node_modules",
+    "venv",
+    "*migrations*",
+]
+
+[tool.ruff.isort]
+section-order = ["fastapi", "future", "standard-library", "third-party",  "first-party", "local-folder"]
+
+[tool.ruff.isort.sections]
+fastapi = ["fastapi"]
+
+[tool.poetry_bumpversion.file."apps/__init__.py"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
+

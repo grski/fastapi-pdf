@@ -9,26 +9,26 @@ from app.core.logs import logger
 from app.db import user_queries
 from app.emails.services import EmailService
 from app.users.constants import COOKIE_EXPIRE_TIME
-from app.users.models import UserInvitation
+from app.users.models import CreateUserInvitation, UserInvitation
 from app.users.services import InvitationKeyService, get_active_user_or_raise
 from settings.base import settings
 
 router = APIRouter(tags=["Users Endpoints"])
 
 
-@router.get("/v1/users", status_code=status.HTTP_200_OK)
+@router.get("/v1/users/me", status_code=status.HTTP_200_OK)
 async def get_users(request: Request):
     get_active_user_or_raise(request)
     return Response(status_code=status.HTTP_200_OK, content="OK")
 
 
-@router.post("/v1/user/invitation", status_code=status.HTTP_201_CREATED)
-async def send_invitation_key(invitation_key: UserInvitation) -> dict:
+@router.post("/v1/users/invite", status_code=status.HTTP_201_CREATED)
+async def send_invitation_key(invitation_key: CreateUserInvitation) -> dict:
     user = user_queries.get_user_by_email(email=invitation_key.user_email)
     if user:
         user_uuid = user["uuid"]
     else:
-        user_uuid = str(uuid.uuid4())
+        user_uuid = uuid.uuid4()
         user = user_queries.post_user(
             name=invitation_key.name,
             email=invitation_key.user_email,
@@ -54,8 +54,8 @@ async def send_invitation_key(invitation_key: UserInvitation) -> dict:
     return {"invitation_key": invitation_key}
 
 
-@router.get("/v1/magic-link/{uuid}", status_code=status.HTTP_200_OK)
-async def get_invite_key(uuid: str) -> dict:
+@router.get("/v1/login/{uuid}", status_code=status.HTTP_200_OK)
+async def get_invite_key(uuid: str) -> RedirectResponse:
     logger.info(f"UUID: {uuid}")
     invitation_key = user_queries.get_invitation_key(uuid=uuid)
     if not invitation_key:

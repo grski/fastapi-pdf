@@ -1,5 +1,7 @@
 from fastapi import FastAPI
 
+import sentry_sdk
+from sentry_sdk.integrations.asgi import SentryAsgiMiddleware
 from starlette.middleware.cors import CORSMiddleware
 
 from settings.base import settings
@@ -23,22 +25,22 @@ def add_cors_middleware(app: FastAPI) -> FastAPI:
     return app
 
 
-# def add_sentry_middleware(app: FastAPI) -> FastAPI:
-#     if settings.SENTRY_DSN:  # pragma: no cover
-#         sentry_sdk.init(
-#             dsn=settings.SENTRY_DSN,
-#             environment=settings.ENVIRONMENT,
-#             send_default_pii=False,
-#             traces_sample_rate=0.3,
-#             profiles_sample_rate=0.3,
-#         )
-#         app.add_middleware(SentryAsgiMiddleware)
-#     return app
+def add_sentry_middleware(app: FastAPI) -> FastAPI:
+    if settings.SENTRY_DSN:
+        sentry_sdk.init(
+            dsn=settings.SENTRY_DSN,
+            environment=settings.ENVIRONMENT,
+            send_default_pii=False,
+            traces_sample_rate=0.3,
+            profiles_sample_rate=0.3,
+        )
+        app.add_middleware(SentryAsgiMiddleware)
+    return app
 
 
 MIDDLEWARES = (
     add_cors_middleware,
-    # add_sentry_middleware,
+    add_sentry_middleware,
 )
 
 

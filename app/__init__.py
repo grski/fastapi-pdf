@@ -1,12 +1,8 @@
 import os
-
 import tomllib
+from pathlib import Path
 
-with open("pyproject.toml", "rb") as f:
+with Path.open("pyproject.toml", "rb") as f:
     data = tomllib.load(f)
     version = data["tool"]["poetry"]["version"]
 
-if os.environ.get("ENVIRONMENT", "local") == "local":
-    from dotenv import load_dotenv
-
-    load_dotenv()

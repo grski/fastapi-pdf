@@ -3,6 +3,7 @@ from fastapi import APIRouter, Header
 from json import JSONDecodeError
 
 import stripe
+from sentry_sdk import capture_exception
 from starlette import status
 from starlette.requests import Request
 from starlette.responses import Response
@@ -29,9 +30,11 @@ async def stripe_webhook(request: Request, stripe_signature: str = Header(str)):
         return Response(status_code=status.HTTP_200_OK)
     except JSONDecodeError as e:
         logger.error(f"JSONDecodeError: {e}")
+        capture_exception(e)
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
     except ValueError as e:
         logger.error(f"ValueError: {e}")
+        capture_exception(e)
         return Response(status_code=status.HTTP_400_BAD_REQUEST)
     except SignatureVerificationError as e:
         logger.error(f"SignatureVerificationError: {e}")

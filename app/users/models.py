@@ -22,9 +22,10 @@ class InvitationKey(TimestampAbstractModel):
     is_used: bool
 
 
-class UserInvitation(BaseModel):
+class CreateUserInvitation(BaseModel):
     user_email: str
     name: str
-    message_limit: int
-    is_used: bool
+
+
+class UserInvitation(TimestampAbstractModel, CreateUserInvitation):
     uuid: str = Field(default=str(uuid.uuid4()))

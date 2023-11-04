@@ -13,7 +13,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/code/
+      - .:/project/
     command: ["bash", "-c","dbmate up && gunicorn -c settings/gunicorn.conf.py app.main:app"]
     env_file:
       - .env
@@ -34,7 +34,6 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres  
       POSTGRES_DB: postgres
-      # POSTGRES_PORT: 5432
     env_file:
       - .env
 

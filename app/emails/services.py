@@ -1,9 +1,9 @@
-import base64
-
 import sendgrid
-from sendgrid import Attachment, Disposition, FileContent, FileName, FileType, Mail
+from sendgrid import Mail
+from sentry_sdk import capture_exception
 
 from app.core.logs import logger
+from app.emails.constants import EXAMPLE_TEMPLATE
 from settings.base import settings
 
 
@@ -15,14 +15,14 @@ class EmailService:
         logger.info(f"Sending email to: {user_email}")
         from_email = settings.EMAIL_FROM
         subject = message_subject
-        html_content = """<p>Witaj!</p>"""
-
-        # html_content = f"{magic_link_url}"
+        html_content = EXAMPLE_TEMPLATE
         mail = Mail(from_email=from_email, to_emails=user_email, subject=subject, html_content=html_content)
         try:
             response = sg.send(mail)
             logger.info(response.status_code)
-            return True
         except Exception as e:
-            logger.info(e)
+            logger.error(e)
+            capture_exception(e)
             return False
+        else:
+            return True

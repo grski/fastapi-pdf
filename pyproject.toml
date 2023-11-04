@@ -2,7 +2,7 @@
 name = "pdf-stack-template"
 version = "0.1.0"
 description = ""
-authors = ["theengineers <contact@theengineers.tech>"]
+authors = ["grski", "hkorzeniewski"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
